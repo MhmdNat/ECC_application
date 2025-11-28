@@ -82,9 +82,9 @@ const DecryptTab = ({
             </p>
             <div
               style={{
-                background: '#111827',
+                background: '#000000',
                 color: '#e5e7eb',
-                borderRadius: '0.85rem',
+                borderRadius: '0.95rem',
                 padding: '0.9rem 1rem',
                 fontSize: '0.9rem',
                 whiteSpace: 'pre-wrap'
@@ -107,7 +107,7 @@ const DecryptTab = ({
             Upload an encrypted file (the .enc.json produced by the Encrypt tab) and recover the original file
             using your private key.
           </p>
-          <div className="field-card-body" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div className="field-card-body" style={{ display: 'flex', flexDirection: 'column', gap: '0.82rem' }}>
             <input
               type="file"
               disabled={loading}
@@ -120,7 +120,7 @@ const DecryptTab = ({
               type="button"
               disabled={loading || !selectedFile}
               className="btn-primary"
-              style={{ marginTop: '0.75rem', alignSelf: 'flex-start' }}
+              style={{ marginTop: '0.82rem', alignSelf: 'flex-start' }}
               onClick={() => {
                 if (selectedFile) {
                   handleDecryptFile(selectedFile);
@@ -134,7 +134,7 @@ const DecryptTab = ({
                 href={fileDecryptUrl}
                 download={fileDecryptName}
                 className="btn-secondary"
-                style={{ alignSelf: 'flex-start', marginTop: '0.75rem' }}
+                style={{ alignSelf: 'flex-start', marginTop: '0.82rem' }}
               >
                 Download decrypted file ({fileDecryptName})
               </a>

@@ -273,7 +273,8 @@ const GraphVisualizationTab = ({ curveParams }) => {
       ffXTicks = getNiceTicks(ffXDomain[0], ffXDomain[1]);
       ffYTicks = getNiceTicks(ffYDomain[0], ffYDomain[1]);
     } catch (e) {
-      ffError = e.message || 'Failed to compute finite-field points.';
+      console.error(e);
+      ffError = 'Failed to compute finite-field points.';
     }
 
     return {
@@ -332,7 +333,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
   return (
     <section className="section-card">
       <h2 className="section-title">Graph Visualization</h2>
-      <p className="field-description" style={{ marginBottom: '0.75rem' }}>
+      <p className="field-description" style={{ marginBottom: '0.82rem' }}>
         This is a real-valued plot of the current curve of the form{' '}
         <code>y² = x³ + ax + b</code> on the left, and a finite-field view of
         the first N points mod <code>p</code> on the right. Both views ignore
@@ -378,8 +379,8 @@ const GraphVisualizationTab = ({ curveParams }) => {
           <div
             style={{
               display: 'flex',
-              gap: '0.75rem',
-              marginTop: '0.75rem',
+              gap: '0.82rem',
+              marginTop: '0.82rem',
               flexWrap: 'wrap',
             }}
           >
@@ -425,8 +426,8 @@ const GraphVisualizationTab = ({ curveParams }) => {
           <div
             style={{
               display: 'flex',
-              gap: '0.75rem',
-              marginTop: '0.75rem',
+              gap: '0.82rem',
+              marginTop: '0.82rem',
               flexWrap: 'wrap',
             }}
           >
@@ -460,8 +461,8 @@ const GraphVisualizationTab = ({ curveParams }) => {
           <div
             style={{
               display: 'flex',
-              gap: '0.75rem',
-              marginTop: '0.75rem',
+              gap: '0.82rem',
+              marginTop: '0.82rem',
               flexWrap: 'wrap',
             }}
           >
@@ -495,8 +496,8 @@ const GraphVisualizationTab = ({ curveParams }) => {
           <div
             style={{
               display: 'flex',
-              gap: '0.75rem',
-              marginTop: '0.75rem',
+              gap: '0.82rem',
+              marginTop: '0.82rem',
               flexWrap: 'wrap',
             }}
           >
@@ -517,7 +518,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
           {error && (
             <p
               className="field-description"
-              style={{ marginTop: '0.75rem', color: '#b91c1c' }}
+              style={{ marginTop: '0.82rem', color: '#b91c1c' }}
             >
               {error}
             </p>
@@ -526,7 +527,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
           {ffError && (
             <p
               className="field-description"
-              style={{ marginTop: '0.75rem', color: '#b91c1c' }}
+              style={{ marginTop: '0.82rem', color: '#b91c1c' }}
             >
               {ffError}
             </p>
@@ -536,7 +537,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
             <p
               style={{
                 marginTop: '0.5rem',
-                fontSize: '0.75rem',
+                fontSize: '0.82rem',
                 color: '#666',
               }}
             >
@@ -563,9 +564,9 @@ const GraphVisualizationTab = ({ curveParams }) => {
           <div
             style={{
               flex: '1 1 320px',
-              borderRadius: '0.75rem',
+              borderRadius: '0.82rem',
               border: '1px solid #e5e7eb',
-              padding: '0.75rem',
+              padding: '0.82rem',
               background: '#fafafa',
             }}
           >
@@ -629,7 +630,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
                   y={height - padding + 16}
                   textAnchor="middle"
                   fontSize="10"
-                  fill="#4b5563"
+                  fill="#000000"
                 >
                   {formatTick(tx)}
                 </text>
@@ -643,7 +644,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
                   y={yScale(ty) + 3}
                   textAnchor="end"
                   fontSize="10"
-                  fill="#4b5563"
+                  fill="#000000"
                 >
                   {formatTick(ty)}
                 </text>
@@ -655,7 +656,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
                 y1={xAxisY}
                 x2={width - padding}
                 y2={xAxisY}
-                stroke="#9ca3af"
+                stroke="#000000"
                 strokeWidth="1.5"
               />
               <line
@@ -663,7 +664,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
                 y1={padding}
                 x2={yAxisX}
                 y2={height - padding}
-                stroke="#9ca3af"
+                stroke="#000000"
                 strokeWidth="1.5"
               />
 
@@ -693,9 +694,9 @@ const GraphVisualizationTab = ({ curveParams }) => {
           <div
             style={{
               flex: '1 1 320px',
-              borderRadius: '0.75rem',
+              borderRadius: '0.82rem',
               border: '1px solid #e5e7eb',
-              padding: '0.75rem',
+              padding: '0.82rem',
               background: '#fafafa',
             }}
           >
@@ -738,7 +739,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
                   y={height - padding + 16}
                   textAnchor="middle"
                   fontSize="10"
-                  fill="#4b5563"
+                  fill="#000000"
                 >
                   {formatTick(tx)}
                 </text>
@@ -752,7 +753,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
                   y={ffYScale(ty) + 3}
                   textAnchor="end"
                   fontSize="10"
-                  fill="#4b5563"
+                  fill="#000000"
                 >
                   {formatTick(ty)}
                 </text>
@@ -764,7 +765,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
                 y1={ffXAxisY}
                 x2={width - padding}
                 y2={ffXAxisY}
-                stroke="#9ca3af"
+                stroke="#000000"
                 strokeWidth="1.5"
               />
               <line
@@ -772,7 +773,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
                 y1={padding}
                 x2={ffYAxisX}
                 y2={height - padding}
-                stroke="#9ca3af"
+                stroke="#000000"
                 strokeWidth="1.5"
               />
 

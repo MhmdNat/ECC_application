@@ -54,7 +54,7 @@ const EncryptTab = ({
               onClick={handleLoadRecipientKey}
               disabled={loading}
               className="btn-secondary"
-              style={{ marginTop: '0.75rem' }}
+              style={{ marginTop: '0.82rem' }}
             >
               Load public key from username
             </button>
@@ -169,7 +169,7 @@ const EncryptTab = ({
             Choose any file (Word, PDF, image, etc.). It will be encrypted using the same ECIES + AES-256-GCM
             scheme. The output is a small JSON file that your recipient can later decrypt with their private key.
           </p>
-          <div className="field-card-body" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div className="field-card-body" style={{ display: 'flex', flexDirection: 'column', gap: '0.82rem' }}>
             <input
               type="file"
               disabled={loading}

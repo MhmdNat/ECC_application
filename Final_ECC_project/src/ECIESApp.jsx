@@ -44,7 +44,7 @@ class EllipticCurve {
       [r, newR] = [newR, r - quotient * newR];
     }
 
-    if (r > 1n) throw new Error(`modular inverse does not exist for ${a} mod ${p}`);
+    if (r > 1n) throw new Error('a is not invertible');
     if (t < 0n) t = t + p;
 
     return t;
@@ -64,26 +64,22 @@ class EllipticCurve {
     if (!P) return Q;
     if (!Q) return P;
 
-    // P + (-P) = O (point at infinity)
     if (P.x === Q.x && P.y === this.mod(-Q.y, this.p)) {
-      return null;
+      return null; // Point at infinity
     }
 
-    // Doubling case: delegate to pointDouble, which is already robust.
+    let m;
     if (P.x === Q.x && P.y === Q.y) {
-      return this.pointDouble(P);
+      // Point doubling
+      const numerator = this.mod(3n * P.x * P.x + this.a, this.p);
+      const denominator = this.mod(2n * P.y, this.p);
+      m = this.mod(numerator * this.modInv(denominator, this.p), this.p);
+    } else {
+      // Point addition
+      const numerator = this.mod(Q.y - P.y, this.p);
+      const denominator = this.mod(Q.x - P.x, this.p);
+      m = this.mod(numerator * this.modInv(denominator, this.p), this.p);
     }
-
-    // General addition
-    const numerator = this.mod(Q.y - P.y, this.p);
-    const denominator = this.mod(Q.x - P.x, this.p);
-
-    // Vertical line: denominator == 0 => point at infinity.
-    if (denominator === 0n) {
-      return null;
-    }
-
-    const m = this.mod(numerator * this.modInv(denominator, this.p), this.p);
 
     const x3 = this.mod(m * m - P.x - Q.x, this.p);
     const y3 = this.mod(m * (P.x - x3) - P.y, this.p);
@@ -94,19 +90,8 @@ class EllipticCurve {
   pointDouble(P) {
     if (!P) return null;
 
-    // If y == 0 (mod p), the tangent is vertical and 2P is the point at infinity.
-    if (this.mod(P.y, this.p) === 0n) {
-      return null;
-    }
-
     const numerator = this.mod(3n * P.x * P.x + this.a, this.p);
     const denominator = this.mod(2n * P.y, this.p);
-
-    // Extra safety: if denominator is 0 for any reason, return infinity.
-    if (denominator === 0n) {
-      return null;
-    }
-
     const m = this.mod(numerator * this.modInv(denominator, this.p), this.p);
 
     const x3 = this.mod(m * m - 2n * P.x, this.p);
@@ -332,8 +317,6 @@ export default function ECIESApp() {
   const [publicKeyX, setPublicKeyX] = useState('');
   const [publicKeyY, setPublicKeyY] = useState('');
   const [privateKey, setPrivateKey] = useState('');
-  // Track which (username, publicKey) we last uploaded to avoid duplicates
-  const [lastUploadedPubKey, setLastUploadedPubKey] = useState('');
   // Auth / user profile
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState('');
@@ -387,7 +370,6 @@ export default function ECIESApp() {
       } else {
         setUser(null);
         setUsername('');
-        setLastUploadedPubKey('');
         if (!guestMode) {
           setShowLandingAuth(true);
         }
@@ -420,38 +402,6 @@ export default function ECIESApp() {
       // Ignore persistence errors
     }
   }, [curveHistory]);
-
-
-  // Auto-upload current public key when a username/user becomes available.
-  // This covers the case where a guest generates keys first, then signs up or sets a username later.
-  useEffect(() => {
-    const maybeUploadPublicKey = async () => {
-      try {
-        if (!user) return;
-        const cleanUsername = (username || '').trim();
-        if (!cleanUsername) return;
-        if (!publicKeyX || !publicKeyY) return;
-
-        const fingerprint = `${cleanUsername}:${publicKeyX}:${publicKeyY}`;
-        if (lastUploadedPubKey === fingerprint) {
-          return;
-        }
-
-        await uploadPublicKey(cleanUsername, String(publicKeyX), String(publicKeyY));
-        setLastUploadedPubKey(fingerprint);
-
-        setStatus((prev) =>
-          prev && prev.length
-            ? prev + ' Also saved your current public key to the cloud.'
-            : `Saved your current public key for "${cleanUsername}" to the cloud.`
-        );
-      } catch (err) {
-        console.error('Auto-upload of public key failed', err);
-      }
-    };
-
-    maybeUploadPublicKey();
-  }, [user, username, publicKeyX, publicKeyY, lastUploadedPubKey]);
 
   // Allow user to paste their own private key and derive the corresponding public key
   const updatePublicFromPrivate = (pkString) => {
@@ -745,14 +695,12 @@ export default function ECIESApp() {
 
       if (username) {
         try {
-          const cleanUsername = username.trim();
           await uploadPublicKey(
-            cleanUsername,
+            username.trim(),
             String(keypair.publicKey.x),
             String(keypair.publicKey.y)
           );
-          setLastUploadedPubKey(`${cleanUsername}:${String(keypair.publicKey.x)}:${String(keypair.publicKey.y)}`);
-          setStatus(`Generated new keypair and saved public key for "${cleanUsername}" to the cloud.`);
+          setStatus(`Generated new keypair and saved public key for "${username.trim()}" to the cloud.`);
         } catch (dbErr) {
           // Non-fatal: keys still generated locally even if upload fails.
           console.error('Failed to upload public key to Firestore', dbErr);
@@ -790,7 +738,8 @@ export default function ECIESApp() {
       setRecipientPubY(data.pubY);
       setStatus(`Loaded public key for "${recipientUsername.trim()}".`);
     } catch (err) {
-      setError(err.message || 'Failed to load public key for username');
+      console.error(err);
+      setError('Failed to load public key for that username.');
     }
     setLoading(false);
   };
@@ -1011,160 +960,100 @@ const handleEncrypt = async () => {
     }
   };
 
-  if (showLandingAuth && !user) {
-    return (
-      <div className="section-shell auth-landing">
-        <div className="auth-landing-inner max-w-4xl mx-auto">
-          <AppHeader onOpenGuide={() => setShowGuide(prev => !prev)} />
-          {showGuide && <UsageHelp />}
-          <div
-            style={{
-              marginTop: '1.25rem',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'stretch',
-              gap: '1rem',
-            }}
-          >
-            <AuthTab user={user} username={username} setUsername={setUsername} />
-            <div
-              className="section-card"
-              style={{
-                padding: '0.9rem 1.25rem',
-                textAlign: 'center',
-                background:
-                  'linear-gradient(135deg, rgba(129, 140, 248, 0.95), rgba(168, 85, 247, 0.9))',
-              }}
-            >
-              <button
-                type="button"
-                className="btn-primary"
-                style={{
-                  width: '100%',
-                  maxWidth: '320px',
-                  margin: '0 auto',
-                  display: 'block',
-                }}
-                onClick={handleContinueAsGuest}
-              >
-                Continue as guest
-              </button>
-              <p
-                className="field-description"
-                style={{ marginTop: '0.5rem', color: 'rgba(255,255,255,0.9)' }}
-              >
-                You can always sign in later from the account panel inside the app.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-
   return (
     <div className="section-shell">
       <div className="max-w-6xl mx-auto">
-        <AppHeader onOpenGuide={() => setShowGuide(prev => !prev)} />
+        <AppHeader onOpenGuide={() => setShowGuide(true)} />
         {showGuide && <UsageHelp />}
 
-        {/* Main layout: left = ECC panels + tabs, right = account panel */}
-        <div className="main-layout">
-          {/* LEFT SIDE: curve config + tabs + content */}
-          <div className="main-layout-left">
-            <TabsNav activeTab={activeTab} setActiveTab={setActiveTab} />
+        <TabsNav activeTab={activeTab} setActiveTab={setActiveTab} />
 
-            {activeTab === 'curve' && (
-              <CurveConfigPanel
-                curveParams={curveParams}
-                setCurveParams={setCurveParams}
-                showCurveConfig={showCurveConfig}
-                setShowCurveConfig={setShowCurveConfig}
-                customCurve={customCurve}
-                loadStandardCurve={loadStandardCurve}
-                validateAndLoadCurve={validateAndLoadCurve}
-                generateRandomCurve={generateRandomCurve}
-                curveError={curveError}
-                curveHistory={curveHistory}
-                onReuseCurve={handleReuseCurve}
-              />
-            )}
+        {activeTab === 'curve' && (
+          <CurveConfigPanel
+            curveParams={curveParams}
+            setCurveParams={setCurveParams}
+            showCurveConfig={showCurveConfig}
+            setShowCurveConfig={setShowCurveConfig}
+            customCurve={customCurve}
+            loadStandardCurve={loadStandardCurve}
+            validateAndLoadCurve={validateAndLoadCurve}
+            generateRandomCurve={generateRandomCurve}
+            curveError={curveError}
+            curveHistory={curveHistory}
+            onReuseCurve={handleReuseCurve}
+          />
+        )}
 
-            {activeTab === 'keys' && (
-              <KeysTab
-                loading={loading}
-                handleGenerateKeys={handleGenerateKeys}
-                privateKey={privateKey}
-                setPrivateKey={updatePublicFromPrivate}
-                publicKeyX={publicKeyX}
-                publicKeyY={publicKeyY}
-                copyToClipboard={copyToClipboard}
-                copied={copied}
-              />
-            )}
+        {activeTab === 'keys' && (
+          <KeysTab
+            loading={loading}
+            handleGenerateKeys={handleGenerateKeys}
+            privateKey={privateKey}
+            setPrivateKey={updatePublicFromPrivate}
+            publicKeyX={publicKeyX}
+            publicKeyY={publicKeyY}
+            copyToClipboard={copyToClipboard}
+            copied={copied}
+          />
+        )}
 
-            {activeTab === 'encrypt' && (
-              <EncryptTab
-                loading={loading}
-                recipientPubX={recipientPubX}
-                setRecipientPubX={setRecipientPubX}
-                recipientPubY={recipientPubY}
-                setRecipientPubY={setRecipientPubY}
-                message={message}
-                setMessage={setMessage}
-                encryptedEnvelope={encryptedEnvelope}
-                copyToClipboard={copyToClipboard}
-                copied={copied}
-                handleEncrypt={handleEncrypt}
-                recipientUsername={recipientUsername}
-                setRecipientUsername={setRecipientUsername}
-                handleLoadRecipientKey={handleLoadRecipientKey}
-                handleEncryptFile={handleEncryptFile}
-                fileDownloadUrl={fileDownloadUrl}
-                fileDownloadName={fileDownloadName}
-              />
-            )}
+        {activeTab === 'encrypt' && (
+          <EncryptTab
+            loading={loading}
+            recipientPubX={recipientPubX}
+            setRecipientPubX={setRecipientPubX}
+            recipientPubY={recipientPubY}
+            setRecipientPubY={setRecipientPubY}
+            message={message}
+            setMessage={setMessage}
+            encryptedEnvelope={encryptedEnvelope}
+            copyToClipboard={copyToClipboard}
+            copied={copied}
+            handleEncrypt={handleEncrypt}
+            recipientUsername={recipientUsername}
+            setRecipientUsername={setRecipientUsername}
+            handleLoadRecipientKey={handleLoadRecipientKey}
+            handleEncryptFile={handleEncryptFile}
+            fileDownloadUrl={fileDownloadUrl}
+            fileDownloadName={fileDownloadName}
+          />
+        )}
 
-            {activeTab === 'decrypt' && (
-              <DecryptTab
-                loading={loading}
-                privateKey={privateKey}
-                setPrivateKey={setPrivateKey}
-                encryptedEnvelope={encryptedEnvelope}
-                setEncryptedEnvelope={setEncryptedEnvelope}
-                decryptedMessage={decryptedMessage}
-                handleDecrypt={handleDecrypt}
-                handleDecryptFile={handleDecryptFile}
-                fileDecryptUrl={fileDecryptUrl}
-                fileDecryptName={fileDecryptName}
-              />
-            )}
+        {activeTab === 'decrypt' && (
+          <DecryptTab
+            loading={loading}
+            privateKey={privateKey}
+            setPrivateKey={setPrivateKey}
+            encryptedEnvelope={encryptedEnvelope}
+            setEncryptedEnvelope={setEncryptedEnvelope}
+            decryptedMessage={decryptedMessage}
+            handleDecrypt={handleDecrypt}
+            handleDecryptFile={handleDecryptFile}
+            fileDecryptUrl={fileDecryptUrl}
+            fileDecryptName={fileDecryptName}
+          />
+        )}
 
-            {status && (
-              <p
-                className="field-description"
-                style={{ marginTop: '0.75rem', color: '#047857' }}
-              >
-                {status}
-              </p>
-            )}
+        {activeTab === 'graph' && (
+          <GraphVisualizationTab curveParams={curveParams} />
+        )}
 
-            {error && (
-              <ErrorAlert message={error} onClose={() => setError('')} />
-            )}
+        {activeTab === 'account' && (
+          <AuthTab user={user} username={username} setUsername={setUsername} />
+        )}
 
-            
-            {activeTab === 'graph' && (
-              <GraphVisualizationTab curveParams={curveParams} />
-            )}
-          </div>
+        {status && (
+          <p
+            className="field-description"
+            style={{ marginTop: '0.82rem', color: '#047857' }}
+          >
+            {status}
+          </p>
+        )}
 
-          {/* RIGHT SIDE: always-visible account panel */}
-          <div className="main-layout-right">
-            <AuthTab user={user} username={username} setUsername={setUsername} />
-          </div>
-        </div>
+        {error && (
+          <ErrorAlert message={error} onClose={() => setError('')} />
+        )}
       </div>
     </div>
   );

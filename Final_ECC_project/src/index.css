@@ -30,7 +30,7 @@ body {
 
 .min-h-screen { min-height: 100vh; }
 .p-4 { padding: 1rem; }
-.max-w-6xl { max-width: 72rem; margin-left: auto; margin-right: auto; }
+.max-w-6xl { max-width: 90rem; margin-left: auto; margin-right: auto; }
 .mx-auto { margin-left: auto; margin-right: auto; }
 .pt-8 { padding-top: 2rem; }
 .mb-8 { margin-bottom: 2rem; }
@@ -57,8 +57,8 @@ body {
 .text-green-200 { color: #bbf7d0; }
 .text-red-200 { color: #fecaca; }
 .text-yellow-200 { color: #fef08a; }
-.text-xs { font-size: 0.75rem; }
-.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.82rem; }
+.text-sm { font-size: 0.95rem; }
 .text-lg { font-size: 1.125rem; }
 .text-xl { font-size: 1.25rem; }
 .text-2xl { font-size: 1.5rem; }
@@ -74,7 +74,7 @@ body {
 /* Cards / panels */
 .section-shell {
   min-height: 100vh;
-  padding: 1.5rem;
+  padding: 0.75rem 1.5rem;
 }
 
 .section-card {
@@ -112,7 +112,7 @@ body {
   border-radius: 999px;
   background: linear-gradient(135deg, var(--primary), #ec4899);
   color: #fff;
-  font-size: 0.76rem;
+  font-size: 0.84rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -121,13 +121,13 @@ body {
   margin-top: 0.75rem;
   font-size: 1.4rem;
   font-weight: 700;
-  color: #111827;
+  color: #000000;
 }
 
 .step-subtitle {
   margin-top: 0.25rem;
   font-size: 0.9rem;
-  color: #6b7280;
+  color: #000000;
 }
 
 /* Field cards (Private/Public key, etc.) */
@@ -150,7 +150,7 @@ body {
 .field-label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #374151;
+  color: #000000;
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -159,7 +159,7 @@ body {
 .field-badge {
   padding: 0.18rem 0.55rem;
   border-radius: 999px;
-  font-size: 0.7rem;
+  font-size: 0.86rem;
   font-weight: 600;
   letter-spacing: 0.03em;
 }
@@ -175,8 +175,8 @@ body {
 }
 
 .field-description {
-  font-size: 0.75rem;
-  color: #9ca3af;
+  font-size: 0.82rem;
+  color: #000000;
   margin-bottom: 0.35rem;
 }
 
@@ -232,7 +232,7 @@ body {
   border-radius: 999px;
   background: #e0e7ff;
   color: #312e81;
-  font-size: 0.78rem;
+  font-size: 0.86rem;
   font-weight: 600;
 }
 
@@ -243,10 +243,10 @@ textarea {
   border-radius: 0.85rem;
   border: 1px solid #e5e7eb;
   padding: 0.65rem 0.8rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
-  color: #111827;
+  color: #000000;
   background-color: #f9fafb;
 }
 
@@ -256,7 +256,7 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-  color: #9ca3af;
+  color: #000000;
 }
 
 /* Tags & layout around inputs */
@@ -288,7 +288,7 @@ textarea::placeholder {
   flex: 1;
   padding: 0.7rem 0.9rem;
   border-radius: 999px;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -320,7 +320,7 @@ textarea::placeholder {
   gap: 0.6rem;
   align-items: flex-start;
   color: #7f1d1d;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .info-note {
@@ -329,7 +329,7 @@ textarea::placeholder {
   border-radius: 1rem;
   border: 1px dashed var(--warning);
   background: #fef9c3;
-  font-size: 0.78rem;
+  font-size: 0.86rem;
   color: #854d0e;
 }
 
@@ -337,8 +337,8 @@ textarea::placeholder {
 @media (min-width: 900px) {
   .split-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
   }
 }
 
@@ -399,14 +399,14 @@ textarea::placeholder {
 }
 
 .history-title {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #111827;
+  color: #000000;
 }
 
 .history-meta {
-  font-size: 0.72rem;
-  color: #6b7280;
+  font-size: 0.9rem;
+  color: #000000;
 }
 
 .history-body {
@@ -417,17 +417,17 @@ textarea::placeholder {
 
 .history-code {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.86rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
-  color: #4b5563;
+  color: #000000;
 }
 
 .history-text {
   display: flex;
   align-items: flex-start;
   gap: 0.4rem;
-  font-size: 0.75rem;
+  font-size: 0.82rem;
 }
 
 .history-pill {
@@ -435,7 +435,7 @@ textarea::placeholder {
   border-radius: 999px;
   background: rgba(16, 185, 129, 0.1);
   color: #047857;
-  font-size: 0.7rem;
+  font-size: 0.86rem;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -446,7 +446,7 @@ textarea::placeholder {
 }
 
 .history-text-main {
-  color: #111827;
+  color: #000000;
   flex: 1;
 }
 
@@ -506,8 +506,8 @@ textarea::placeholder {
   padding: 0.6rem 1rem;
   border-radius: 999px;
   background: rgba(148, 163, 184, 0.06);
-  color: #4b5563;
-  font-size: 0.85rem;
+  color: #000000;
+  font-size: 0.95rem;
   font-weight: 500;
   display: inline-flex;
   align-items: center;
@@ -521,7 +521,7 @@ textarea::placeholder {
 
 .btn-ghost:hover {
   background: #e5e7eb;
-  color: #111827;
+  color: #000000;
   border-color: rgba(148, 163, 184, 0.9);
   transform: translateY(-1px);
   box-shadow: 0 12px 24px rgba(148, 163, 184, 0.45);
@@ -547,7 +547,7 @@ textarea::placeholder {
   border-radius: 999px;
   background: #e0e7ff;
   color: #312e81;
-  font-size: 0.78rem;
+  font-size: 0.86rem;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -579,9 +579,9 @@ textarea::placeholder {
 }
 
 .sub-field-label {
-  font-size: 0.78rem;
+  font-size: 0.86rem;
   font-weight: 600;
-  color: #4b5563;
+  color: #000000;
 }
 
 /* Nicer file input styling for encrypt/decrypt tabs */
@@ -590,7 +590,7 @@ input[type="file"] {
   border-radius: 0.85rem;
   border: 1px dashed #c7d2fe;
   padding: 0.55rem 0.8rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   background-color: #f9fafb;
   cursor: pointer;
 }
@@ -603,7 +603,7 @@ input[type="file"]::file-selector-button {
   background: var(--primary);
   color: #ffffff;
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   cursor: pointer;
   box-shadow: var(--shadow);
 }
@@ -616,35 +616,4 @@ input[type="file"]:disabled {
 input[type="file"]:disabled::file-selector-button {
   opacity: 0.7;
   cursor: not-allowed;
-}
-
-/* Responsive app shell layout: main content + side auth panel */
-.main-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  align-items: stretch;
-  margin-top: 1.5rem;
-}
-
-.main-layout-left {
-  flex: 1;
-  min-width: 0;
-}
-
-.main-layout-right {
-  width: 100%;
-}
-
-/* On wider screens, arrange main layout horizontally and give sidebar a fixed width */
-@media (min-width: 900px) {
-  .main-layout {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
-  .main-layout-right {
-    width: 320px;
-    flex-shrink: 0;
-  }
 }

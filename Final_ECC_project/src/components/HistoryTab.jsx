@@ -55,7 +55,7 @@ const HistoryTab = ({ history }) => {
               <Clock className="w-4 h-4" style={{ marginRight: '0.35rem' }} />
               <span>History &amp; activity</span>
             </div>
-            <h2 className="step-title" style={{ marginTop: '0.7rem' }}>
+            <h2 className="step-title" style={{ marginTop: '0.86rem' }}>
               Review your last curves &amp; encryptions
             </h2>
             <p className="step-subtitle">

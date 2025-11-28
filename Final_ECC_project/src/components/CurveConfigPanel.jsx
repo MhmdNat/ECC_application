@@ -55,7 +55,8 @@ const CurveConfigPanel = ({
         });
         setCurveFileError('');
       } catch (err) {
-        setCurveFileError(err.message || 'Invalid curve file. Expected JSON with a, b, p, Gx, Gy, n.');
+        console.error(err);
+        setCurveFileError('Invalid curve file. Expected JSON with a, b, p, Gx, Gy, n.');
       }
     };
     reader.onerror = () => {
@@ -226,7 +227,7 @@ const CurveConfigPanel = ({
             )}
 
             <div className="split-layout mb-4">
-              <div className="field-card" style={{ boxShadow: 'none' }}>
+              <div className="field-card" style={{ boxShadow: 'none', marginTop: '0.65rem' }}>
                 <div className="field-card-header">
                   <span className="field-label">Curve Equation</span>
                 </div>
@@ -238,7 +239,7 @@ const CurveConfigPanel = ({
                 </p>
               </div>
 
-              <div className="field-card" style={{ boxShadow: 'none' }}>
+              <div className="field-card" style={{ boxShadow: 'none', marginTop: '0.65rem' }}>
                 <div className="field-card-header">
                   <span className="field-label">Generator &amp; Order</span>
                 </div>
@@ -254,7 +255,7 @@ const CurveConfigPanel = ({
             </div>
 
             <div className="split-layout mb-4">
-              <div className="field-card" style={{ boxShadow: 'none' }}>
+              <div className="field-card" style={{ boxShadow: 'none', marginTop: '0.65rem' }}>
                 <label className="field-label">a (coefficient)</label>
                 <input
                   type="text"
@@ -265,7 +266,7 @@ const CurveConfigPanel = ({
                 />
               </div>
 
-              <div className="field-card" style={{ boxShadow: 'none' }}>
+              <div className="field-card" style={{ boxShadow: 'none', marginTop: '0.65rem' }}>
                 <label className="field-label">b (coefficient)</label>
                 <input
                   type="text"
@@ -276,7 +277,7 @@ const CurveConfigPanel = ({
                 />
               </div>
 
-              <div className="field-card" style={{ boxShadow: 'none' }}>
+              <div className="field-card" style={{ boxShadow: 'none', marginTop: '0.65rem' }}>
                 <label className="field-label">p (prime modulus)</label>
                 <input
                   type="text"
@@ -289,7 +290,7 @@ const CurveConfigPanel = ({
             </div>
 
             <div className="split-layout mb-4">
-              <div className="field-card" style={{ boxShadow: 'none' }}>
+              <div className="field-card" style={{ boxShadow: 'none', marginTop: '0.65rem' }}>
                 <label className="field-label">Generator Gx</label>
                 <input
                   type="text"
@@ -300,7 +301,7 @@ const CurveConfigPanel = ({
                 />
               </div>
 
-              <div className="field-card" style={{ boxShadow: 'none' }}>
+              <div className="field-card" style={{ boxShadow: 'none', marginTop: '0.65rem' }}>
                 <label className="field-label">Generator Gy</label>
                 <input
                   type="text"
@@ -311,7 +312,7 @@ const CurveConfigPanel = ({
                 />
               </div>
 
-              <div className="field-card" style={{ boxShadow: 'none' }}>
+              <div className="field-card" style={{ boxShadow: 'none', marginTop: '0.65rem' }}>
                 <label className="field-label">Order n</label>
                 <input
                   type="text"
@@ -378,18 +379,18 @@ const CurveConfigPanel = ({
                   maxHeight: '220px',
                   overflowY: 'auto',
                   background: '#0f172a',
-                  borderRadius: '0.85rem',
-                  padding: '0.8rem 1rem',
+                  borderRadius: '0.95rem',
+                  padding: '0.9rem 1rem',
                   fontFamily:
                     'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-                  fontSize: '0.78rem',
+                  fontSize: '0.86rem',
                   color: '#e5e7eb'
                 }}
               >
                 <div
                   style={{
                     marginBottom: '0.5rem',
-                    fontSize: '0.8rem',
+                    fontSize: '0.9rem',
                     color: '#93c5fd'
                   }}
                 >
@@ -458,7 +459,7 @@ const CurveConfigPanel = ({
                         <button
                           type="button"
                           className="btn-chip"
-                          style={{ paddingInline: '0.8rem', fontSize: '0.7rem' }}
+                          style={{ paddingInline: '0.9rem', fontSize: '0.86rem' }}
                           onClick={() => onReuseCurve && onReuseCurve(item.params)}
                         >
                           Reuse this curve

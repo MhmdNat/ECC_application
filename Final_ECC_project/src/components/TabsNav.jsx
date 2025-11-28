@@ -1,5 +1,5 @@
 import React from 'react';
-import { Key, Lock, Unlock, BookOpen, Settings } from 'lucide-react';
+import { Key, Lock, Unlock, BookOpen, Settings, LogIn } from 'lucide-react';
 
 const TabsNav = ({ activeTab, setActiveTab }) => {
   const tabs = [
@@ -8,6 +8,7 @@ const TabsNav = ({ activeTab, setActiveTab }) => {
     { id: 'encrypt', label: 'Encrypt', icon: Lock },
     { id: 'decrypt', label: 'Decrypt', icon: Unlock },
     { id: 'graph', label: 'Graph Visualization', icon: BookOpen },
+    { id: 'account', label: 'Account', icon: LogIn },
   ];
 
   return (

@@ -56,11 +56,6 @@ const UsageHelp = () => {
           </div>
         </div>
 
-        <div className="info-note">
-          <strong>Security note:</strong> this demo runs entirely in your browser and is meant for learning.
-          Do not use it for real-world production secrets. Real systems need hardened randomness,
-          side‑channel protections, secure key storage and audited curve choices.
-        </div>
       </div>
     </section>
   );

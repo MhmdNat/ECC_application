@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { LogIn, LogOut, UserPlus } from 'lucide-react';
 import { signUp, login, logout } from '../firebase/firebase/auth';
 import { saveUserProfile } from '../firebase/firebase/userProfile';
@@ -12,17 +12,39 @@ const AuthTab = ({ user, username, setUsername }) => {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  // Keep the local username field in sync with the username from props.
-  // This ensures that when a user signs in and we load their profile,
-  // the Account panel immediately shows their current username.
-  useEffect(() => {
-    setLocalUsername(username || '');
-  }, [username]);
+  const validatePassword = (pw) => {
+    const value = (pw || '').trim();
+    const minLength = 8;
+
+    if (value.length < minLength) {
+      return 'Password must be at least 8 characters long and include uppercase, lowercase, a number, and a special character.';
+    }
+    if (!/[a-z]/.test(value)) {
+      return 'Password must include at least one lowercase letter.';
+    }
+    if (!/[A-Z]/.test(value)) {
+      return 'Password must include at least one uppercase letter.';
+    }
+    if (!/\d/.test(value)) {
+      return 'Password must include at least one number.';
+    }
+    if (!/[@$!%*?&]/.test(value)) {
+      return 'Password must include at least one special character (@ $ ! % * ? &).';
+    }
+    return null;
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     setError('');
     setStatus('');
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
+      return;
+    }
+
     setSubmitting(true);
     try {
       const cred = await signUp(email.trim(), password);
@@ -36,7 +58,14 @@ const AuthTab = ({ user, username, setUsername }) => {
       }
       setStatus('Account created and signed in.');
     } catch (err) {
-      setError(err.message || 'Failed to sign up.');
+      console.error(err);
+      if (err.code === 'username-taken' || err.message === 'That username is already taken.') {
+        setError('That username is already taken.');
+      } else if (err.code === 'auth/email-already-in-use') {
+        setError('You already have an account with this email. Please sign in instead.');
+      } else {
+        setError('Could not sign up. Please check your details and try again.');
+      }
     }
     setSubmitting(false);
   };
@@ -50,7 +79,8 @@ const AuthTab = ({ user, username, setUsername }) => {
       await login(email.trim(), password);
       setStatus('Signed in successfully.');
     } catch (err) {
-      setError(err.message || 'Failed to sign in.');
+      console.error(err);
+      setError('Failed to sign in. Please check your email and password.');
     }
     setSubmitting(false);
   };
@@ -67,7 +97,8 @@ const AuthTab = ({ user, username, setUsername }) => {
       setEmail('');
       setPassword('');
     } catch (err) {
-      setError(err.message || 'Failed to sign out.');
+      console.error(err);
+      setError('Failed to sign out. Please try again.');
     }
     setSubmitting(false);
   };
@@ -87,7 +118,12 @@ const AuthTab = ({ user, username, setUsername }) => {
       setUsername(cleanUsername);
       setStatus('Profile updated.');
     } catch (err) {
-      setError(err.message || 'Failed to save profile.');
+      console.error(err);
+      if (err.code === 'username-taken' || err.message === 'That username is already taken.') {
+        setError('That username is already taken.');
+      } else {
+        setError('Failed to save profile. Please try again.');
+      }
     }
     setSubmitting(false);
   };
@@ -102,7 +138,7 @@ const AuthTab = ({ user, username, setUsername }) => {
           <p className="field-description">
             You are signed in as <strong>{user.email}</strong>.
           </p>
-          <label className="field-label" style={{ marginTop: '0.8rem' }}>
+          <label className="field-label" style={{ marginTop: '0.9rem' }}>
             Public username
           </label>
           <p className="field-description">
@@ -118,7 +154,7 @@ const AuthTab = ({ user, username, setUsername }) => {
             onClick={handleSaveProfile}
             disabled={submitting}
             className="btn-secondary"
-            style={{ marginTop: '0.8rem' }}
+            style={{ marginTop: '0.9rem' }}
           >
             Save profile
           </button>
@@ -150,7 +186,7 @@ const AuthTab = ({ user, username, setUsername }) => {
           Use email and password to {mode === 'login' ? 'sign in' : 'create a new account'}.
         </p>
 
-        <label className="field-label" style={{ marginTop: '0.8rem' }}>
+        <label className="field-label" style={{ marginTop: '0.9rem' }}>
           Email
         </label>
         <input
@@ -161,7 +197,7 @@ const AuthTab = ({ user, username, setUsername }) => {
           required
         />
 
-        <label className="field-label" style={{ marginTop: '0.8rem' }}>
+        <label className="field-label" style={{ marginTop: '0.9rem' }}>
           Password
         </label>
         <input
@@ -173,8 +209,14 @@ const AuthTab = ({ user, username, setUsername }) => {
         />
 
         {mode === 'signup' && (
+          <p className="field-description" style={{ marginTop: '0.4rem' }}>
+            Password must be at least 8 characters and include uppercase, lowercase, a number, and a special character (@ $ ! % * ? &).
+          </p>
+        )}
+
+        {mode === 'signup' && (
           <>
-            <label className="field-label" style={{ marginTop: '0.8rem' }}>
+            <label className="field-label" style={{ marginTop: '0.9rem' }}>
               Public username
             </label>
             <p className="field-description">

@@ -28,8 +28,8 @@ const AppHeader = ({ onOpenGuide }) => {
               <Lock className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-semibold" style={{ color: '#111827' }}>
-                ECC Encryption Tool
+              <h1 className="text-2xl font-semibold" style={{ color: '#000000' }}>
+                ECE Crypt
               </h1>
               <p className="text-sm" style={{ color: '#4c1d95' }}>
                 Encrypt &amp; decrypt messages using elliptic curve cryptography
