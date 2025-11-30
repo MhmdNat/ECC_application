@@ -274,7 +274,7 @@ const GraphVisualizationTab = ({ curveParams }) => {
       ffYTicks = getNiceTicks(ffYDomain[0], ffYDomain[1]);
     } catch (e) {
       console.error(e);
-      ffError = 'p is too large to visualize all finite-field points here (max 500). Use a smaller toy prime, and a simple graph.;
+      ffError = 'p is too large to visualize all finite-field points here (max 500). Use a smaller toy prime, and a simple graph.';
     }
 
     return {
