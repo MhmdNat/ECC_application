@@ -22,5 +22,19 @@
   <body class="bg-slate-900">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <!-- Warning Message -->
+    <div id="mobile-warning">This website is only compatible with laptops. Please switch to a laptop for a better experience.</div>
+
+    <script>
+        // Function to check if the device is mobile
+        function isMobile() {
+            return window.innerWidth <= 768; // Adjust this value as needed
+        }
+
+        // Show the warning if the device is mobile
+        if (isMobile()) {
+            document.getElementById('mobile-warning').style.display = 'block';
+        }
+    </script>
   </body>
 </html>
