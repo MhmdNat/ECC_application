@@ -4,37 +4,11 @@
     <meta charset="UTF-8" />
     <title>ECE Crypt</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <style>
-        #mobile-warning {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(255, 0, 0, 0.7);
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            z-index: 9999;
-        }
-    </style>
   </head>
   <body class="bg-slate-900">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <!-- Warning Message -->
     <div id="mobile-warning">This website is only compatible with laptops. Please switch to a laptop for a better experience.</div>
-
-    <script>
-        // Function to check if the device is mobile
-        function isMobile() {
-            return window.innerWidth <= 400; // Adjust this value as needed
-        }
-
-        // Show the warning if the device is mobile
-        if (isMobile()) {
-            document.getElementById('mobile-warning').style.display = 'block';
-        }
-    </script>
   </body>
 </html>
